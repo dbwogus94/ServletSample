@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" 
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <display-name>ServletTest</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  
+  	<!-- 
+		## was(ServletContainer)가 구동되는 순서
+		1. ServletContainer생성(tomcat에서 구현)  	
+  		2. ServletContextListener호출
+  		3. 필터 생성(web.xml에 선언한 순서대로 생성되지 않는다.)
+  		4. Servlet 생성 - <servlet>태그 안에 <load-on-startup>태그가 선언된 Servlet만 구동시점에 생성된다.
+  		
+  		## ServletContainer에서 SerlvetContext로 사용가능한 객체(class)는
+  		1. interface Servlet을 구현한 클래스		: Servlet을 사용하기 위한 기능을 추상화한 인테페이스  
+  		2. 추상클래스 GenericServlet를 상속한 클래스	: 인터페이스 Servlet를 구현한 클래스로서 모든 Servlet 클래스는  GenericServlet를 상속한다.
+  		3. 추상클래스 HttpServlet를 상속한 클래스		: GenericServlet를 상속한 추상클래스로 HTTP 프로토콜에 알맞는 동작을 수행하도록 구현한 클래스이다.
+  	 -->
+  	 
+	<!-- ServletContextListener를 구현한 리스너 적용: servlet container가 생성, 삭제 될 때 트리거 되는 리스너-->
+	<listener>
+		<listener-class>listenerTest.MyFirstListener_ServletContextListener</listener-class>
+	</listener>
+	
+	<!-- 첫번째 필터 사용 선언 : ServletContaner이 생성된후 filter생성 -->
+	<filter>
+		<filter-name>myFilter</filter-name>
+		<filter-class>filterTest.MyFilter</filter-class>
+	</filter>
+	
+	<!-- 첫번째 필터를 사용할 서블릿 매핑 -->
+	<filter-mapping>
+		<filter-name>myFilter</filter-name>
+		<servlet-name>myThirdServlet_HttpServlet</servlet-name>			<!-- /third URL에 필터적용 -->
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>myFilter</filter-name>
+		<servlet-name>mySecondServlet_GenericServlet</servlet-name>		<!-- /second URL에 필터적용 -->	 
+	</filter-mapping>
+
+	<!-- 두번째 필터 사용 선언: ServletContaner이 생성된후 filter생성 -->
+	<filter>
+		<filter-name>mySecondFilter</filter-name>
+		<filter-class>filterTest.MySecondFilter</filter-class>
+	</filter>
+	
+	<!-- 두번째 필터를 사용할 서블릿 매핑 -->
+	<filter-mapping>
+		<filter-name>mySecondFilter</filter-name>
+		<servlet-name>myThirdServlet_HttpServlet</servlet-name>
+	</filter-mapping>
+
+
+	<!-- interface Servlet을 구현한 MyFirstServlet_Servlet 클래스 사용 선언 -->
+	<servlet>
+		<servlet-name>myFirstServlet_Servlet</servlet-name>
+		<servlet-class>servletTest.MyFirstServlet_Servlet</servlet-class>
+	</servlet>
+	
+	<!-- 선언된 서블릿 URL메핑 -->
+	<servlet-mapping>
+		<servlet-name>myFirstServlet_Servlet</servlet-name>
+		<url-pattern>/first</url-pattern>
+	</servlet-mapping>
+	
+	<!-- abstract class GenericServlet를 상속한 MySecondServlet_GenericServlet 클래스 사용 선언 -->
+	<servlet>
+		<servlet-name>mySecondServlet_GenericServlet</servlet-name>
+		<servlet-class>servletTest.MySecondServlet_GenericServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>	<!-- 서블릿 컨테이너가 생성될때 해당 서블릿도 생성. 없을 경우는 최초 호출되는 시점에 생성한다. -->
+	</servlet>
+	
+	<!-- 선언된 서블릿 URL메핑 -->
+	<servlet-mapping>
+		<servlet-name>mySecondServlet_GenericServlet</servlet-name>
+		<url-pattern>/second</url-pattern>
+	</servlet-mapping>
+	
+	<!-- abstract class HttpServlet을 상속한 MyThirdServlet_HttpServlet 클래스 사용선언 -->
+	<servlet>
+		<servlet-name>myThirdServlet_HttpServlet</servlet-name>
+		<servlet-class>servletTest.MyThirdServlet_HttpServlet</servlet-class>
+	</servlet>
+	
+	<!-- 선언된 서블릿 URL메핑 -->
+	<servlet-mapping>
+		<servlet-name>myThirdServlet_HttpServlet</servlet-name>
+		<url-pattern>/third</url-pattern>
+	</servlet-mapping>
+</web-app>

@@ -1,0 +1,23 @@
+
+
+# 플랜 A: 풀 독학
+
+1. servlet > Spring > Spring Boot
+
+2. 안드로이드 독학, kotlin, java(복습 1.8문법: 람다, Sream, 익명함수)
+
+3. JPA, DB
+
+4. 리엑트 기초
+
+# 플랜 B: 학원 병행
+
+1. servlet > Spring > Spring Boot
+
+2. 국비지원 안드로이드, kotlin, java
+
+3. JPA, DB
+
+4. 리엑트 기초
+
+
